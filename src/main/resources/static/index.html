@@ -1,0 +1,195 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>BiteExpress — Modern Food Ordering & Kitchen System</title>
+    <link rel="preconnect" href="https://fonts.googleapis.com">
+    <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+    <link href="https://fonts.googleapis.com/css2?family=Outfit:wght@400;500;600;700;800&family=Plus+Jakarta+Sans:wght@400;500;600;700&display=swap" rel="stylesheet">
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/css/all.min.css">
+    <link rel="stylesheet" href="styles.css">
+</head>
+<body>
+    <div class="app-container">
+        <!-- Top Navigation -->
+        <header class="navbar">
+            <div class="logo-group">
+                <div class="logo-icon">🍕</div>
+                <div class="logo-text">
+                    <span class="brand-name">BiteExpress</span>
+                    <span class="brand-sub"><span class="status-dot"></span> LIVE SYSTEM</span>
+                </div>
+            </div>
+
+            <nav class="nav-links">
+                <button class="nav-btn active" data-target="menu-view"><i class="fa-solid fa-utensils"></i> Menu</button>
+                <button class="nav-btn" data-target="orders-view"><i class="fa-solid fa-clock-rotate-left"></i> Live Orders <span id="active-orders-badge" class="badge-mini">0</span></button>
+                <button class="nav-btn" data-target="kitchen-view"><i class="fa-solid fa-fire-burner"></i> Kitchen Admin</button>
+                <button class="nav-btn" data-target="analytics-view"><i class="fa-solid fa-chart-line"></i> Analytics</button>
+            </nav>
+
+            <div class="header-actions">
+                <button id="cart-toggle-btn" class="cart-btn">
+                    <i class="fa-solid fa-bag-shopping"></i>
+                    <span>Cart</span>
+                    <span id="cart-count" class="cart-count">0</span>
+                </button>
+            </div>
+        </header>
+
+        <!-- Main Content Area -->
+        <main class="content-area">
+            <!-- Promo Banner -->
+            <section class="promo-bar">
+                <div class="promo-item"><i class="fa-solid fa-tag"></i> Use <strong>WELCOME50</strong> for 50% OFF (Up to $15)!</div>
+                <div class="promo-item"><i class="fa-solid fa-truck-fast"></i> Free Delivery on orders over $50 with code <strong>FREESHIP</strong>!</div>
+                <div class="promo-item"><i class="fa-solid fa-fire"></i> Fresh Wood-Fired & Handcrafted Daily</div>
+            </section>
+
+            <!-- MENU VIEW -->
+            <div id="menu-view" class="view-panel active">
+                <div class="hero-banner">
+                    <div class="hero-text">
+                        <h1>Craving Culinary Excellence?</h1>
+                        <p>Order fresh chef-curated dishes delivered scorching hot right to your doorstep in minutes.</p>
+                    </div>
+                    <div class="search-bar-container">
+                        <i class="fa-solid fa-magnifying-glass search-icon"></i>
+                        <input type="text" id="menu-search" placeholder="Search for burgers, pizza, ramen, desserts...">
+                    </div>
+                </div>
+
+                <!-- Category Tabs -->
+                <div class="category-pills" id="category-pills">
+                    <button class="pill active" data-category="All">All Items</button>
+                    <button class="pill" data-category="Burgers">🍔 Burgers</button>
+                    <button class="pill" data-category="Pizza">🍕 Pizza</button>
+                    <button class="pill" data-category="Asian">🍜 Asian</button>
+                    <button class="pill" data-category="Healthy">🥗 Healthy</button>
+                    <button class="pill" data-category="Desserts">🍰 Desserts</button>
+                    <button class="pill" data-category="Drinks">🍹 Drinks</button>
+                </div>
+
+                <!-- Menu Items Grid -->
+                <div id="menu-grid" class="menu-grid">
+                    <!-- Loaded dynamically from API -->
+                    <div class="loading-spinner"><i class="fa-solid fa-circle-notch fa-spin"></i> Loading Fresh Menu...</div>
+                </div>
+            </div>
+
+            <!-- LIVE ORDERS TRACKER VIEW -->
+            <div id="orders-view" class="view-panel">
+                <div class="section-header">
+                    <h2><i class="fa-solid fa-clock-rotate-left"></i> Live Order Tracking</h2>
+                    <p>Track real-time progress from our kitchen to your door.</p>
+                </div>
+                <div id="orders-list" class="orders-list">
+                    <!-- Dynamic orders loaded here -->
+                </div>
+            </div>
+
+            <!-- KITCHEN ADMIN VIEW -->
+            <div id="kitchen-view" class="view-panel">
+                <div class="section-header">
+                    <h2><i class="fa-solid fa-fire-burner"></i> Kitchen Management Portal</h2>
+                    <p>Real-time order status updates for kitchen staff & delivery team.</p>
+                </div>
+                <div id="kitchen-orders-grid" class="kitchen-grid">
+                    <!-- Loaded dynamically -->
+                </div>
+            </div>
+
+            <!-- ANALYTICS DASHBOARD VIEW -->
+            <div id="analytics-view" class="view-panel">
+                <div class="section-header">
+                    <h2><i class="fa-solid fa-chart-pie"></i> Business Performance Analytics</h2>
+                    <p>Live metrics calculated dynamically by the BiteExpress Java engine.</p>
+                </div>
+                <div class="analytics-metrics-grid">
+                    <div class="metric-card glass-card">
+                        <div class="metric-icon green"><i class="fa-solid fa-dollar-sign"></i></div>
+                        <div class="metric-info">
+                            <span class="metric-label">Total Revenue</span>
+                            <span id="metric-revenue" class="metric-value">$0.00</span>
+                        </div>
+                    </div>
+                    <div class="metric-card glass-card">
+                        <div class="metric-icon orange"><i class="fa-solid fa-receipt"></i></div>
+                        <div class="metric-info">
+                            <span class="metric-label">Total Orders</span>
+                            <span id="metric-total-orders" class="metric-value">0</span>
+                        </div>
+                    </div>
+                    <div class="metric-card glass-card">
+                        <div class="metric-icon blue"><i class="fa-solid fa-spinner"></i></div>
+                        <div class="metric-info">
+                            <span class="metric-label">Active Kitchen Orders</span>
+                            <span id="metric-active-orders" class="metric-value">0</span>
+                        </div>
+                    </div>
+                    <div class="metric-card glass-card">
+                        <div class="metric-icon purple"><i class="fa-solid fa-chart-line"></i></div>
+                        <div class="metric-info">
+                            <span class="metric-label">Avg Order Value</span>
+                            <span id="metric-avg-value" class="metric-value">$0.00</span>
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </main>
+
+        <!-- CART SLIDING DRAWER -->
+        <div id="cart-drawer-overlay" class="drawer-overlay"></div>
+        <aside id="cart-drawer" class="cart-drawer">
+            <div class="drawer-header">
+                <h3><i class="fa-solid fa-bag-shopping"></i> Your Order Basket</h3>
+                <button id="close-cart-btn" class="close-btn">&times;</button>
+            </div>
+
+            <div id="cart-items-container" class="cart-items-container">
+                <div class="empty-cart-msg">
+                    <i class="fa-solid fa-basket-shopping"></i>
+                    <p>Your basket is currently empty.</p>
+                    <button class="btn btn-secondary" onclick="document.getElementById('close-cart-btn').click()">Explore Menu</button>
+                </div>
+            </div>
+
+            <div class="cart-summary-section">
+                <!-- Promo Code -->
+                <div class="promo-input-group">
+                    <input type="text" id="promo-code-input" placeholder="Enter Coupon (e.g. WELCOME50)">
+                    <button id="apply-promo-btn" class="btn btn-sm btn-outline">Apply</button>
+                </div>
+                <div id="promo-feedback" class="promo-feedback"></div>
+
+                <!-- Price Calculations -->
+                <div class="bill-row"><span>Subtotal</span><span id="bill-subtotal">$0.00</span></div>
+                <div class="bill-row green-text" id="bill-discount-row" style="display:none;"><span>Discount</span><span id="bill-discount">-$0.00</span></div>
+                <div class="bill-row"><span>Delivery Fee</span><span id="bill-delivery">$3.99</span></div>
+                <div class="bill-row"><span>Estimated Tax (8%)</span><span id="bill-tax">$0.00</span></div>
+                <div class="bill-row total-row"><span>Grand Total</span><span id="bill-total">$0.00</span></div>
+
+                <!-- Customer Details Form -->
+                <form id="checkout-form" class="checkout-form">
+                    <h4><i class="fa-solid fa-user"></i> Delivery Details</h4>
+                    <input type="text" id="cust-name" placeholder="Full Name *" required>
+                    <input type="tel" id="cust-phone" placeholder="Phone Number *" required>
+                    <input type="text" id="cust-address" placeholder="Delivery Address *" required>
+                    <select id="cust-payment" required>
+                        <option value="CARD">Credit / Debit Card</option>
+                        <option value="UPI">UPI / Instant Transfer</option>
+                        <option value="CASH">Cash on Delivery</option>
+                    </select>
+
+                    <button type="submit" id="place-order-btn" class="btn btn-primary btn-block">
+                        <i class="fa-solid fa-circle-check"></i> Complete & Place Order
+                    </button>
+                </form>
+            </div>
+        </aside>
+    </div>
+
+    <script src="app.js"></script>
+</body>
+</html>

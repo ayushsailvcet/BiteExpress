@@ -1,0 +1,28 @@
+# Dockerfile.vercel for BiteExpress Food Ordering System
+# Vercel container deployment (Fluid Compute) — Java 17 HttpServer + static frontend.
+# The container must listen on $PORT (injected by Vercel at runtime).
+
+# ---------- BUILD STAGE ----------
+FROM maven:3.9-eclipse-temurin-17 AS build
+WORKDIR /app
+COPY pom.xml .
+COPY src ./src
+RUN mvn -B clean compile
+# Ensure static frontend is present in the build output
+# (Maven copies src/main/resources/* to target/classes by default;
+# this is a belt-and-braces repeat for the static folder.)
+RUN mkdir -p target/classes/static && cp -r src/main/resources/static/* target/classes/static/
+
+# ---------- RUNTIME STAGE ----------
+FROM eclipse-temurin:17-jre
+WORKDIR /app
+COPY --from=build /app/target/classes /app/classes
+# The server resolves static files relative to its working directory:
+# "src/main/resources/static" first, then "static". Neither path exists
+# if only /app/classes is copied, so expose the frontend at /app/static.
+COPY --from=build /app/target/classes/static /app/static
+EXPOSE 8080
+# NOTE: no hardcoded PORT. The app reads $PORT from the environment
+# (default 8080) and binds the wildcard interface, so Vercel can inject
+# any port at runtime.
+CMD ["java", "-cp", "classes", "com.foodapp.FoodOrderingApplication"]
